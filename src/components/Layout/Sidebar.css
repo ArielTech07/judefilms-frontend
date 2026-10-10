@@ -23,13 +23,16 @@
 .sidebar-brand {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
+  align-items: center;
+  width: 100%;
 }
 
 .sidebar-logo-img {
-  height: 34px;
-  width: auto;
-  max-width: 170px;
+  width: 100%;
+  max-width: 160px;
+  height: auto;
+  max-height: 90px;
   object-fit: contain;
   display: block;
 }
