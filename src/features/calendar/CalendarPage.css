@@ -1,0 +1,121 @@
+.calendar-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+  animation: fadeIn 0.3s ease;
+}
+
+.calendar-container {
+  background-color: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+  box-shadow: var(--shadow-md);
+}
+
+/* Sobrescribir variables de FullCalendar para adaptarlas al tema oscuro */
+:root {
+  --fc-border-color: var(--color-border);
+  --fc-button-bg-color: var(--color-bg-tertiary);
+  --fc-button-border-color: var(--color-border);
+  --fc-button-hover-bg-color: var(--color-bg-elevated);
+  --fc-button-hover-border-color: var(--color-border-hover);
+  --fc-button-active-bg-color: var(--color-accent);
+  --fc-button-active-border-color: var(--color-accent);
+  --fc-today-bg-color: rgba(255, 255, 255, 0.05);
+  --fc-page-bg-color: transparent;
+  --fc-neutral-bg-color: var(--color-bg-secondary);
+}
+
+/* Estilos específicos para FullCalendar */
+.fc-theme-standard .fc-scrollgrid {
+  border-color: var(--color-border);
+}
+
+.fc-theme-standard th, 
+.fc-theme-standard td {
+  border-color: var(--color-border);
+}
+
+.fc-button-primary {
+  color: var(--color-accent) !important;
+  text-transform: capitalize;
+}
+
+.fc-button-primary:not(:disabled).fc-button-active, 
+.fc-button-primary:not(:disabled):active {
+  color: var(--color-bg-primary) !important;
+  font-weight: 600;
+}
+
+.fc-event {
+  cursor: pointer;
+  border-radius: 4px;
+  padding: 2px 4px;
+  font-size: 0.85em;
+  transition: opacity 0.2s ease;
+  border: none;
+}
+
+.fc-event:hover {
+  opacity: 0.8;
+}
+
+.fc-daygrid-day-number,
+.fc-col-header-cell-cushion {
+  color: var(--color-accent);
+  text-decoration: none;
+}
+
+.fc-list-event-title,
+.fc-list-event-time {
+  color: var(--color-accent);
+}
+
+/* Leyenda */
+.calendar-legend {
+  background-color: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-md) var(--spacing-lg);
+  margin-top: var(--spacing-md);
+}
+
+.calendar-legend h3 {
+  font-size: 1rem;
+  color: var(--color-accent-muted);
+  margin-bottom: var(--spacing-sm);
+  margin-top: 0;
+}
+
+.legend-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-lg);
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  color: var(--color-accent-soft);
+}
+
+.color-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+@media (max-width: 768px) {
+  .fc-toolbar {
+    flex-direction: column;
+    gap: var(--spacing-md);
+  }
+  
+  .fc-toolbar-title {
+    font-size: 1.2em !important;
+  }
+}

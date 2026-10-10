@@ -1,0 +1,161 @@
+.client-detail {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xl);
+}
+
+.detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: var(--spacing-sm);
+}
+
+.detail-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: var(--color-accent);
+}
+
+.detail-section h3 {
+  font-size: 1rem;
+  color: var(--color-accent-soft);
+  margin-bottom: var(--spacing-md);
+  font-weight: 600;
+}
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-md);
+}
+
+.detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.detail-item .label {
+  font-size: 0.85rem;
+  color: var(--color-accent-muted);
+}
+
+.detail-item .value {
+  font-size: 1rem;
+  color: var(--color-accent);
+}
+
+.financial-summary {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+}
+
+.fin-box {
+  background-color: var(--color-bg-tertiary);
+  padding: var(--spacing-md);
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.fin-box .label {
+  font-size: 0.85rem;
+  color: var(--color-accent-muted);
+  margin-bottom: 4px;
+}
+
+.fin-box .value {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--color-accent);
+}
+
+.fin-box.pending .value {
+  color: var(--color-warning);
+}
+
+.fin-box.paid .value {
+  color: var(--color-success);
+}
+
+.status-badge-container {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  font-size: 0.9rem;
+  color: var(--color-accent-muted);
+}
+
+.notes-box {
+  background-color: var(--color-bg-tertiary);
+  padding: var(--spacing-md);
+  border-radius: var(--radius-md);
+  border-left: 3px solid var(--color-border);
+}
+
+.notes-box p {
+  margin: 0;
+  white-space: pre-wrap;
+  color: var(--color-accent-soft);
+}
+
+.download-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  background-color: rgba(96, 165, 250, 0.1);
+  color: var(--color-info);
+  border: 1px solid rgba(96, 165, 250, 0.2);
+  padding: 10px 16px;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  font-weight: 500;
+}
+
+.download-btn:hover {
+  background-color: rgba(96, 165, 250, 0.2);
+}
+
+.detail-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: var(--spacing-lg);
+  padding-top: var(--spacing-lg);
+  border-top: 1px solid var(--color-border);
+}
+
+.btn-danger-outline {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  background: transparent;
+  color: var(--color-danger);
+  border: 1px solid var(--color-danger);
+  padding: 10px 16px;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  font-weight: 500;
+}
+
+.btn-danger-outline:hover {
+  background-color: rgba(248, 113, 113, 0.1);
+}
+
+@media (max-width: 600px) {
+  .detail-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .financial-summary {
+    grid-template-columns: 1fr;
+  }
+}
