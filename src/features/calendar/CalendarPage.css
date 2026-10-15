@@ -1,7 +1,7 @@
 .calendar-page {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-lg);
+  gap: var(--spacing-md);
   animation: fadeIn 0.3s ease;
 }
 
@@ -13,7 +13,7 @@
   box-shadow: var(--shadow-md);
 }
 
-/* Sobrescribir variables de FullCalendar para adaptarlas al tema oscuro */
+/* Sobrescribir variables de FullCalendar para tema oscuro */
 :root {
   --fc-border-color: var(--color-border);
   --fc-button-bg-color: var(--color-bg-tertiary);
@@ -22,14 +22,16 @@
   --fc-button-hover-border-color: var(--color-border-hover);
   --fc-button-active-bg-color: var(--color-accent);
   --fc-button-active-border-color: var(--color-accent);
-  --fc-today-bg-color: rgba(255, 255, 255, 0.05);
+  --fc-today-bg-color: rgba(255, 255, 255, 0.04);
   --fc-page-bg-color: transparent;
   --fc-neutral-bg-color: var(--color-bg-secondary);
 }
 
-/* Estilos específicos para FullCalendar */
+/* Estilos de bordes y grilla */
 .fc-theme-standard .fc-scrollgrid {
   border-color: var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
 }
 
 .fc-theme-standard th, 
@@ -40,12 +42,21 @@
 .fc-button-primary {
   color: var(--color-accent) !important;
   text-transform: capitalize;
+  font-weight: 500;
+  border-radius: var(--radius-sm) !important;
+  transition: all 0.15s ease;
 }
 
 .fc-button-primary:not(:disabled).fc-button-active, 
 .fc-button-primary:not(:disabled):active {
   color: var(--color-bg-primary) !important;
+  background-color: var(--color-accent) !important;
+  border-color: var(--color-accent) !important;
   font-weight: 600;
+}
+
+.fc-button-primary:focus {
+  box-shadow: none !important;
 }
 
 .fc-event {
@@ -58,7 +69,7 @@
 }
 
 .fc-event:hover {
-  opacity: 0.8;
+  opacity: 0.85;
 }
 
 .fc-daygrid-day-number,
@@ -67,23 +78,244 @@
   text-decoration: none;
 }
 
+.fc-col-header-cell-cushion {
+  padding: 8px 4px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
 .fc-list-event-title,
 .fc-list-event-time {
   color: var(--color-accent);
 }
 
-/* Leyenda */
+/* Contenido de evento en desktop */
+.desktop-event-content {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow: hidden;
+  width: 100%;
+}
+
+.desktop-event-dot {
+  width: 7px;
+  height: 7px;
+  min-width: 7px;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.desktop-event-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.82rem;
+}
+
+/* ══════════════════════════════════════════════
+   AGENDA INTERACTIVA PARA MOBILE
+   ══════════════════════════════════════════════ */
+.calendar-agenda {
+  background-color: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  box-shadow: var(--shadow-sm);
+  animation: fadeIn 0.25s ease;
+}
+
+.agenda-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: var(--spacing-sm);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.agenda-title-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.agenda-icon {
+  color: var(--color-accent-soft);
+  flex-shrink: 0;
+}
+
+.agenda-date-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--color-accent);
+  margin: 0;
+}
+
+.agenda-count-badge {
+  font-size: 0.72rem;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  background: var(--color-bg-elevated);
+  color: var(--color-accent-soft);
+  font-weight: 600;
+  border: 1px solid var(--color-border);
+}
+
+.agenda-empty-state {
+  padding: var(--spacing-lg) var(--spacing-md);
+  text-align: center;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.agenda-empty-title {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--color-accent-soft);
+  margin-bottom: 4px;
+}
+
+.agenda-empty-sub {
+  font-size: 0.75rem;
+  color: var(--color-accent-muted);
+  margin: 0;
+}
+
+.agenda-cards-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.agenda-event-card {
+  display: flex;
+  align-items: center;
+  background: var(--color-bg-tertiary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.agenda-event-card:hover,
+.agenda-event-card:active {
+  background: var(--color-bg-elevated);
+  border-color: var(--color-border-hover);
+  transform: translateY(-1px);
+}
+
+.agenda-color-bar {
+  width: 5px;
+  align-self: stretch;
+  flex-shrink: 0;
+}
+
+.agenda-event-info {
+  flex: 1;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.agenda-event-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.agenda-type-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 4px;
+  border: 1px solid;
+}
+
+.agenda-type-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.agenda-event-time {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.75rem;
+  color: var(--color-accent-muted);
+  font-weight: 500;
+}
+
+.agenda-client-name {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--color-accent);
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.agenda-client-phone {
+  font-size: 0.75rem;
+  color: var(--color-accent-muted);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.agenda-card-action {
+  padding-right: 12px;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  color: var(--color-accent-muted);
+  font-size: 0.78rem;
+  font-weight: 500;
+  flex-shrink: 0;
+}
+
+.agenda-view-text {
+  display: none;
+}
+
+@media (min-width: 480px) {
+  .agenda-view-text {
+    display: inline;
+  }
+}
+
+/* ══════════════════════════════════════════════
+   LEYENDA DE COLORES
+   ══════════════════════════════════════════════ */
 .calendar-legend {
   background-color: var(--color-bg-secondary);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   padding: var(--spacing-md) var(--spacing-lg);
-  margin-top: var(--spacing-md);
 }
 
-.calendar-legend h3 {
-  font-size: 1rem;
+.legend-header h3 {
+  font-size: 0.85rem;
+  font-weight: 600;
   color: var(--color-accent-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
   margin-bottom: var(--spacing-sm);
   margin-top: 0;
 }
@@ -91,31 +323,185 @@
 .legend-items {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--spacing-lg);
+  gap: 10px 18px;
 }
 
 .legend-item {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 0.9rem;
+  font-size: 0.82rem;
   color: var(--color-accent-soft);
 }
 
 .color-dot {
-  width: 12px;
-  height: 12px;
+  width: 10px;
+  height: 10px;
+  min-width: 10px;
   border-radius: 50%;
   display: inline-block;
 }
 
+/* ══════════════════════════════════════════════
+   RESPONSIVE DESIGN (MOBILE ≤ 768px)
+   ══════════════════════════════════════════════ */
 @media (max-width: 768px) {
-  .fc-toolbar {
-    flex-direction: column;
-    gap: var(--spacing-md);
+  .calendar-page {
+    gap: var(--spacing-sm);
   }
-  
+
+  .calendar-container {
+    padding: var(--spacing-sm);
+    border-radius: var(--radius-md);
+  }
+
+  /* Header compacto en una sola fila limpia */
+  .fc-toolbar {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 8px !important;
+    margin-bottom: var(--spacing-sm) !important;
+  }
+
+  .fc-toolbar-chunk {
+    display: flex !important;
+    align-items: center !important;
+    gap: 4px !important;
+  }
+
   .fc-toolbar-title {
-    font-size: 1.2em !important;
+    font-size: 1rem !important;
+    font-weight: 700 !important;
+    text-transform: capitalize !important;
+    color: var(--color-accent) !important;
+  }
+
+  .fc-button {
+    padding: 5px 9px !important;
+    font-size: 0.8rem !important;
+  }
+
+  /* Nombres de días compactos */
+  .fc-col-header-cell-cushion {
+    font-size: 0.68rem !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    color: var(--color-accent-muted) !important;
+    padding: 6px 2px !important;
+  }
+
+  /* Celdas del calendario limpias, cuadradas y táctiles */
+  .is-mobile .fc-daygrid-day-frame {
+    min-height: 46px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 2px 0 !important;
+    cursor: pointer;
+  }
+
+  .is-mobile .fc-daygrid-day-top {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    width: 100% !important;
+    float: none !important;
+  }
+
+  .is-mobile .fc-daygrid-day-number {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    width: 100% !important;
+    padding: 0 !important;
+  }
+
+  /* Ocultar eventos por defecto en celdas de mes (las bolitas van en dayCellContent) */
+  .is-mobile .fc-daygrid-day-events {
+    display: none !important;
+  }
+
+  .is-mobile .fc-daygrid-day-bottom {
+    display: none !important;
+  }
+
+  /* Contenedor interno de cada día */
+  .cal-cell-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 2px 0;
+    gap: 3px;
+  }
+
+  .cal-day-num {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--color-accent);
+    transition: all 0.15s ease;
+  }
+
+  /* Día de hoy si no está seleccionado */
+  .is-mobile .fc-day-today .cal-cell-inner:not(.is-selected) .cal-day-num {
+    background: rgba(255, 255, 255, 0.12);
+    color: var(--color-accent);
+    font-weight: 700;
+  }
+
+  /* Día seleccionado activo con círculo blanco destacado */
+  .cal-cell-inner.is-selected .cal-day-num {
+    background: var(--color-accent) !important;
+    color: #000000 !important;
+    font-weight: 700 !important;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+  }
+
+  /* Bolitas de eventos bajo el número de día */
+  .cal-day-dots {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    height: 6px;
+  }
+
+  .cal-dot {
+    width: 5px;
+    height: 5px;
+    min-width: 5px;
+    border-radius: 50%;
+    display: inline-block;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  }
+
+  .cal-dot-more {
+    font-size: 0.65rem;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--color-accent-muted);
+  }
+
+  /* Leyenda compacta en mobile */
+  .calendar-legend {
+    padding: var(--spacing-sm) var(--spacing-md);
+  }
+
+  .legend-items {
+    gap: 8px 14px;
+  }
+
+  .legend-item {
+    font-size: 0.78rem;
   }
 }
