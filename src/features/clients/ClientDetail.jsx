@@ -3,10 +3,10 @@ import Modal from '../../components/UI/Modal';
 import Badge from '../../components/UI/Badge';
 import { getEventLabel } from '../../utils/constants';
 import { formatCurrency, formatDate } from '../../utils/formatters';
-import { Download, Edit, Trash2 } from 'lucide-react';
+import { Download, Edit, Trash2, CheckCircle2 } from 'lucide-react';
 import './ClientDetail.css';
 
-const ClientDetail = ({ client, onClose, onEdit, onDelete }) => {
+const ClientDetail = ({ client, onClose, onEdit, onDelete, onCompletePayment }) => {
   if (!client) return null;
 
   // const handleDownloadPDF = () => {
@@ -110,14 +110,22 @@ const ClientDetail = ({ client, onClose, onEdit, onDelete }) => {
         )}
 
         <div className="detail-actions">
-          <button className="btn-danger-outline" onClick={onDelete}>
+          <button className="btn-danger-outline" onClick={onDelete} type="button">
             <Trash2 size={18} />
             <span>Eliminar</span>
           </button>
-          <button className="btn-primary" onClick={() => onEdit(client)}>
-            <Edit size={18} />
-            <span>Editar</span>
-          </button>
+          <div className="detail-right-actions">
+            {client.pagoPendiente > 0 && onCompletePayment && (
+              <button className="btn-success-outline" onClick={onCompletePayment} type="button">
+                <CheckCircle2 size={18} />
+                <span>Completar Pago</span>
+              </button>
+            )}
+            <button className="btn-primary" onClick={() => onEdit(client)} type="button">
+              <Edit size={18} />
+              <span>Editar</span>
+            </button>
+          </div>
         </div>
       </div>
     </Modal>

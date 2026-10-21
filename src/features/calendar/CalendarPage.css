@@ -452,19 +452,30 @@
     transition: all 0.15s ease;
   }
 
-  /* Día de hoy si no está seleccionado */
-  .is-mobile .fc-day-today .cal-cell-inner:not(.is-selected) .cal-day-num {
+  /* Día de hoy si no está seleccionado y no tiene evento único */
+  .is-mobile .fc-day-today .cal-cell-inner:not(.is-selected):not(.has-single-event) .cal-day-num {
     background: rgba(255, 255, 255, 0.12);
     color: var(--color-accent);
     font-weight: 700;
   }
 
-  /* Día seleccionado activo con círculo blanco destacado */
-  .cal-cell-inner.is-selected .cal-day-num {
+  /* Día seleccionado cuando NO tiene un único evento (círculo blanco normal) */
+  .cal-cell-inner.is-selected:not(.has-single-event) .cal-day-num {
     background: var(--color-accent) !important;
     color: #000000 !important;
     font-weight: 700 !important;
     box-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+  }
+
+  /* Día seleccionado cuando SÍ tiene un único evento: mantiene su color y añade un anillo exterior */
+  .cal-cell-inner.is-selected.has-single-event .cal-day-num {
+    box-shadow: 0 0 0 2px var(--color-bg-secondary), 0 0 0 4px #FFFFFF, 0 0 12px rgba(255, 255, 255, 0.5) !important;
+  }
+
+  /* Placeholder de altura cuando no hay bolitas (para mantener alineadas todas las celdas) */
+  .cal-day-dots-placeholder {
+    height: 6px;
+    width: 100%;
   }
 
   /* Bolitas de eventos bajo el número de día */

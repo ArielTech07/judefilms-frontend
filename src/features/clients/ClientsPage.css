@@ -152,17 +152,50 @@
   border-top: 1px solid var(--color-border);
 }
 
+.card-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .btn-icon {
   background: none;
   border: none;
   cursor: pointer;
-  opacity: 0.7;
-  transition: opacity var(--transition-fast);
+  transition: all var(--transition-fast);
   font-size: 1.1rem;
+  padding: 4px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
 }
 
-.btn-icon:hover {
+.btn-icon.edit-btn {
+  opacity: 0.75;
+}
+
+.btn-icon.edit-btn:hover {
   opacity: 1;
+  background-color: var(--color-bg-elevated);
+  transform: scale(1.08);
+}
+
+.btn-icon.pay-btn {
+  color: var(--color-success);
+  background-color: rgba(74, 222, 128, 0.12);
+  border: 1px solid rgba(74, 222, 128, 0.25);
+  padding: 4px 6px;
+  opacity: 0.9;
+}
+
+.btn-icon.pay-btn:hover {
+  opacity: 1;
+  background-color: var(--color-success);
+  color: #0A0A0A;
+  box-shadow: 0 0 12px rgba(74, 222, 128, 0.4);
+  transform: scale(1.08);
 }
 
 .no-results {

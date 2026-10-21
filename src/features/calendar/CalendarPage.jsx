@@ -4,11 +4,14 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import { Calendar as CalendarIcon, Clock, Phone, ChevronRight } from 'lucide-react';
-import { getClients } from '../../services/clientService';
+import { getClients, deleteClient } from '../../services/clientService';
+import { updateEvento } from '../../services/eventoService';
 import { flattenAllClients } from '../../utils/mappers';
 import { getEventLabel } from '../../utils/constants';
 import ClientDetail from '../clients/ClientDetail';
 import ClientForm from '../clients/ClientForm';
+import ConfirmModal from '../../components/UI/ConfirmModal';
+import toast from 'react-hot-toast';
 import './CalendarPage.css';
 
 // Colores por tipo de evento para el calendario
@@ -49,6 +52,12 @@ const CalendarPage = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= MOBILE_BREAKPOINT);
   const [selectedDate, setSelectedDate] = useState(getTodayDateStr());
+
+  // Estados para modales de confirmación
+  const [confirmPaymentClient, setConfirmPaymentClient] = useState(null);
+  const [isCompletingPayment, setIsCompletingPayment] = useState(false);
+  const [clientToDelete, setClientToDelete] = useState(null);
+  const [isDeletingClient, setIsDeletingClient] = useState(false);
 
   // Detectar cambios de resolución
   useEffect(() => {
@@ -137,8 +146,64 @@ const CalendarPage = () => {
     if (shouldReload) loadEvents();
   };
 
-  // Render para cada celda de día: SOLO se usa en mobile (bolitas centradas bajo el número)
-  // En desktop no se utiliza para garantizar numeración nativa sin duplicación
+  // Ejecutar completado de pago desde Calendar
+  const handleConfirmPayment = async () => {
+    if (!confirmPaymentClient || !confirmPaymentClient.eventoId) return;
+    setIsCompletingPayment(true);
+    try {
+      const eventoPayload = {
+        cliente: { id: confirmPaymentClient.clienteId },
+        tipoEvento: confirmPaymentClient.tipoEvento,
+        fecha: confirmPaymentClient.fechaEvento,
+        hora: confirmPaymentClient.horaEvento || null,
+        precioTotal: confirmPaymentClient.precioTotal,
+        adelanto: confirmPaymentClient.precioTotal,
+        notasAdicionales: confirmPaymentClient.notas || null
+      };
+
+      await updateEvento(confirmPaymentClient.eventoId, eventoPayload);
+      toast.success(`Pago completado para ${confirmPaymentClient.nombreCompleto}`);
+      setConfirmPaymentClient(null);
+
+      if (selectedClient && selectedClient.id === confirmPaymentClient.id) {
+        setSelectedClient(prev => ({
+          ...prev,
+          adelanto: confirmPaymentClient.precioTotal,
+          pagoPendiente: 0,
+          estado: 'pagado'
+        }));
+      }
+
+      loadEvents();
+    } catch (error) {
+      toast.error('Error al completar el pago');
+      console.error(error);
+    } finally {
+      setIsCompletingPayment(false);
+    }
+  };
+
+  // Ejecutar eliminación desde Calendar
+  const handleConfirmDelete = async () => {
+    if (!clientToDelete) return;
+    setIsDeletingClient(true);
+    try {
+      await deleteClient(clientToDelete.clienteId || clientToDelete.id);
+      toast.success('Cliente eliminado correctamente');
+      setClientToDelete(null);
+      setSelectedClient(null);
+      loadEvents();
+    } catch (error) {
+      toast.error('Error al eliminar el cliente');
+      console.error(error);
+    } finally {
+      setIsDeletingClient(false);
+    }
+  };
+
+  // Render para cada celda de día: SOLO se usa en mobile
+  // - 1 evento: encierra el número con el color del tipo de evento (sin bolita abajo)
+  // - 2+ eventos: mantiene las bolitas de colores debajo de la fecha
   const renderMobileDayCellContent = useCallback((arg) => {
     const year = arg.date.getFullYear();
     const month = String(arg.date.getMonth() + 1).padStart(2, '0');
@@ -147,11 +212,36 @@ const CalendarPage = () => {
 
     const dayEvents = events.filter(e => e.start === dateStr);
     const isSelected = selectedDate === dateStr;
+    const hasSingleEvent = dayEvents.length === 1;
+    const hasMultipleEvents = dayEvents.length > 1;
+
+    let singleEventStyle = {};
+    if (hasSingleEvent) {
+      const eventColor = dayEvents[0].backgroundColor;
+      // Contraste óptimo para el texto: oscuro sobre colores claros/pasteles, blanco sobre oscuros
+      const isLightBg = ['#FFFFFF', '#FCD34D', '#9CA3AF', '#60A5FA', '#F472B6'].includes(eventColor?.toUpperCase());
+      const textColor = isLightBg ? '#000000' : '#FFFFFF';
+
+      singleEventStyle = {
+        backgroundColor: eventColor,
+        color: textColor,
+        fontWeight: '700',
+        border: eventColor === '#FFFFFF' ? '1px solid #777' : 'none',
+        boxShadow: isSelected
+          ? `0 0 0 2px var(--color-bg-secondary), 0 0 0 4px #FFFFFF, 0 0 10px ${eventColor}88`
+          : `0 1px 4px rgba(0, 0, 0, 0.4)`
+      };
+    }
 
     return (
-      <div className={`cal-cell-inner ${isSelected ? 'is-selected' : ''}`}>
-        <span className="cal-day-num">{arg.dayNumberText}</span>
-        {dayEvents.length > 0 && (
+      <div className={`cal-cell-inner ${isSelected ? 'is-selected' : ''} ${hasSingleEvent ? 'has-single-event' : ''}`}>
+        <span
+          className={`cal-day-num ${hasSingleEvent ? 'single-event-num' : ''}`}
+          style={hasSingleEvent ? singleEventStyle : undefined}
+        >
+          {arg.dayNumberText}
+        </span>
+        {hasMultipleEvents ? (
           <div className="cal-day-dots">
             {dayEvents.slice(0, 3).map((e, idx) => (
               <span
@@ -167,6 +257,8 @@ const CalendarPage = () => {
               <span className="cal-dot-more">+{dayEvents.length - 3}</span>
             )}
           </div>
+        ) : (
+          <div className="cal-day-dots-placeholder" />
         )}
       </div>
     );
@@ -309,9 +401,8 @@ const CalendarPage = () => {
           client={selectedClient} 
           onClose={handleCloseDetail}
           onEdit={handleEdit}
-          onDelete={() => {
-            alert('Por favor elimine desde la vista de Clientes');
-          }}
+          onDelete={() => setClientToDelete(selectedClient)}
+          onCompletePayment={() => setConfirmPaymentClient(selectedClient)}
         />
       )}
 
@@ -321,6 +412,32 @@ const CalendarPage = () => {
           onClose={handleCloseEdit} 
         />
       )}
+
+      {/* Modal de confirmación para Completar Pago */}
+      <ConfirmModal
+        isOpen={Boolean(confirmPaymentClient)}
+        onClose={() => setConfirmPaymentClient(null)}
+        onConfirm={handleConfirmPayment}
+        title="Completar Pago"
+        message={`¿Estás seguro de completar el pago del cliente "${confirmPaymentClient?.nombreCompleto}"? El monto restante pasará a 0 y el estado será Pagado.`}
+        confirmText="Completar Pago"
+        cancelText="Cancelar"
+        variant="success"
+        isLoading={isCompletingPayment}
+      />
+
+      {/* Modal de confirmación para Eliminar Cliente */}
+      <ConfirmModal
+        isOpen={Boolean(clientToDelete)}
+        onClose={() => setClientToDelete(null)}
+        onConfirm={handleConfirmDelete}
+        title="Eliminar Cliente"
+        message={`¿Estás seguro de eliminar a "${clientToDelete?.nombreCompleto}" de todo el sistema? Esta acción no se puede deshacer.`}
+        confirmText="Eliminar"
+        cancelText="Cancelar"
+        variant="danger"
+        isLoading={isDeletingClient}
+      />
     </div>
   );
 };
