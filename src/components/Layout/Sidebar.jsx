@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { Users, Calendar, LayoutDashboard, LogOut, Menu, X } from 'lucide-react';
+import { Users, Calendar, LayoutDashboard, LogOut, Menu, X, Image as ImageIcon } from 'lucide-react';
 import logoImg from '../../assets/logo.png';
 import './Sidebar.css';
 
@@ -34,6 +34,10 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
           <NavLink to="/dashboard" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`} onClick={toggleSidebar}>
             <LayoutDashboard size={20} />
             <span>Dashboard</span>
+          </NavLink>
+          <NavLink to="/galeria-web" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`} onClick={toggleSidebar}>
+            <ImageIcon size={20} />
+            <span>Galería Web</span>
           </NavLink>
         </nav>
 

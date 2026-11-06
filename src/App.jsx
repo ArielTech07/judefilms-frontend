@@ -8,6 +8,7 @@ import LoginPage from './features/auth/LoginPage';
 import ClientsPage from './features/clients/ClientsPage';
 import CalendarPage from './features/calendar/CalendarPage';
 import DashboardPage from './features/dashboard/DashboardPage';
+import GaleryWebAdmin from './features/galery/GaleryWebAdmin';
 import './App.css';
 
 function App() {
@@ -22,6 +23,8 @@ function App() {
               <Route path="/clientes" element={<ClientsPage />} />
               <Route path="/calendario" element={<CalendarPage />} />
               <Route path="/dashboard" element={<DashboardPage />} />
+              <Route path="/galery" element={<GaleryWebAdmin />} />
+              <Route path="/galeria-web" element={<GaleryWebAdmin />} />
               <Route path="/" element={<Navigate to="/clientes" replace />} />
             </Route>
           </Route>
