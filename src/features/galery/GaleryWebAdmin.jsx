@@ -26,62 +26,8 @@ const CATEGORIAS = [
   { id: "videos", label: "Videos" },
 ];
 
-const INITIAL_PHOTOS = [
-  {
-    id: 1,
-    category: "bodas",
-    imageUrl:
-      "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80",
-    createdAt: "2026-02-15",
-  },
-  {
-    id: 2,
-    category: "bodas",
-    imageUrl:
-      "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=800&q=80",
-    createdAt: "2026-02-18",
-  },
-  {
-    id: 3,
-    category: "corporativo",
-    imageUrl:
-      "https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=800&q=80",
-    createdAt: "2026-02-25",
-  },
-  {
-    id: 4,
-    category: "eventos",
-    imageUrl:
-      "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=800&q=80",
-    createdAt: "2026-03-01",
-  },
-  {
-    id: 5,
-    category: "sesiones",
-    imageUrl:
-      "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80",
-    createdAt: "2026-03-05",
-  },
-  {
-    id: 6,
-    category: "videos",
-    imageUrl:
-      "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=800&q=80",
-    createdAt: "2026-03-10",
-  },
-];
-
-const STORAGE_KEY = "judefilms_galery_web_photos";
-
 const GaleryWebAdmin = () => {
-  const [photos, setPhotos] = useState(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      return saved ? JSON.parse(saved) : INITIAL_PHOTOS;
-    } catch {
-      return INITIAL_PHOTOS;
-    }
-  });
+  const [photos, setPhotos] = useState([]);
 
   const [filterCategory, setFilterCategory] = useState("todos");
   const [isUploadOpen, setIsUploadOpen] = useState(false);
@@ -119,8 +65,6 @@ const GaleryWebAdmin = () => {
     cargarFotos();
   }, []);
 
-
-
   const filteredPhotos = useMemo(() => {
     if (filterCategory === "todos") return photos;
     return photos.filter((p) => p.category === filterCategory);
@@ -132,12 +76,11 @@ const GaleryWebAdmin = () => {
     if (!file) return;
 
     if (!file.type.startsWith("image/")) {
-      toast.error("Selecciona una imagen valida (JPG, PNG, WEBP)")
+      toast.error("Selecciona una imagen valida (JPG, PNG, WEBP)");
       return;
     }
 
     setSelectedFile(file);
-
 
     const reader = new FileReader();
     reader.onloadend = () => {
@@ -153,49 +96,47 @@ const GaleryWebAdmin = () => {
       return;
     }
     setIsUploading(true);
-    try{
-      const res=await subirFoto(selectedFile,uploadCategory)
-    
+    try {
+      const res = await subirFoto(selectedFile, uploadCategory);
 
-    const newPhoto = {
-      id: res.id,
-      category: res.categoria,
-      imageUrl: res.imageUrl,
-      createdAt: res.fechaCreacion
+      const newPhoto = {
+        id: res.id,
+        category: res.categoria,
+        imageUrl: res.imageUrl,
+        createdAt: res.fechaCreacion,
+      };
+
+      setPhotos((prev) => [newPhoto, ...prev]);
+      toast.success("Imagen subida con éxito");
+
+      setPreviewImage("");
+      setSelectedFile(null);
+      setIsUploadOpen(false);
+    } catch (error) {
+      console.error("Error al subir", error);
+      toast.error(error.response?.data?.error || "Error al subir la imagen");
+    } finally {
+      setIsUploading(false);
     }
-    
-    setPhotos((prev) => [newPhoto, ...prev]);
-    toast.success("Imagen subida con éxito");
-
-    setPreviewImage("");
-    setSelectedFile(null);
-    setIsUploadOpen(false);
-  } catch(error){
-    console.error("Error al subir",error);
-    toast.error(error.response?.data?.error || 'Error al subir la imagen');
-
-  } finally{
-    setIsUploading(false)
-  }
-  }
+  };
 
   // Confirmar eliminación
   const handleConfirmDelete = async () => {
-  if (!photoToDelete) return;
-  try {
-    await eliminarFoto(photoToDelete.id);
-    setPhotos(prev => prev.filter(p => p.id !== photoToDelete.id));
-    if (selectedImageDetail?.id === photoToDelete.id) {
-      setSelectedImageDetail(null);
+    if (!photoToDelete) return;
+    try {
+      await eliminarFoto(photoToDelete.id);
+      setPhotos((prev) => prev.filter((p) => p.id !== photoToDelete.id));
+      if (selectedImageDetail?.id === photoToDelete.id) {
+        setSelectedImageDetail(null);
+      }
+      toast.success("Imagen eliminada de la web y de R2");
+    } catch (error) {
+      console.error("Error al eliminar:", error);
+      toast.error("Error al eliminar la imagen");
+    } finally {
+      setPhotoToDelete(null);
     }
-    toast.success('Imagen eliminada de la web y de R2');
-  } catch (error) {
-    console.error('Error al eliminar:', error);
-    toast.error('Error al eliminar la imagen');
-  } finally {
-    setPhotoToDelete(null);
-  }
-};
+  };
 
   return (
     <div className="wp-media-page">
