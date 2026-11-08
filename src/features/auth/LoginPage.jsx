@@ -1,30 +1,32 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
-import { Lock, User } from 'lucide-react';
-import toast from 'react-hot-toast';
-import logoImg from '../../assets/logo.png';
-import './LoginPage.css';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
+import toast from "react-hot-toast";
+import logoImg from "../../assets/logo.png";
+import { User, Lock, Eye, EyeOff } from "lucide-react";
+import "./LoginPage.css";
 
 const LoginPage = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+
   const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    
+
     setTimeout(async () => {
       const result = await login(username, password);
-      
+
       if (result.success) {
-        toast.success('Sesión iniciada correctamente');
-        navigate('/clientes');
+        toast.success("Sesión iniciada correctamente");
+        navigate("/clientes");
       } else {
-        toast.error(result.error || 'Error al iniciar sesión');
+        toast.error(result.error || "Error al iniciar sesión");
       }
       setIsLoading(false);
     }, 800);
@@ -37,32 +39,40 @@ const LoginPage = () => {
           <img src={logoImg} alt="JudeFilms" className="login-brand-logo" />
           <p className="login-header-subtitle">Control de Eventos</p>
         </div>
-        
+
         <form onSubmit={handleSubmit} className="login-form">
           <div className="input-group">
             <User size={20} className="input-icon" />
-            <input 
-              type="text" 
-              placeholder="Usuario" 
+            <input
+              type="text"
+              placeholder="Usuario"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
             />
           </div>
-          
+
           <div className="input-group">
             <Lock size={20} className="input-icon" />
-            <input 
-              type="password" 
-              placeholder="Contraseña" 
+            <input
+              type={showPassword ? "text" : "password"}
+              placeholder="Contraseña"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
             />
+            <button
+              type="button"
+              className="password-toggle"
+              onClick={() => setShowPassword(!showPassword)}
+              aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+            >
+              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+            </button>
           </div>
-          
+
           <button type="submit" className="login-btn" disabled={isLoading}>
-            {isLoading ? 'Iniciando...' : 'Iniciar Sesión'}
+            {isLoading ? "Iniciando..." : "Iniciar Sesión"}
           </button>
         </form>
       </div>
