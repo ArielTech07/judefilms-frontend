@@ -47,7 +47,7 @@ const ClientsPage = () => {
   const [filterType, setFilterType] = useState('todos');
   const [filterMonth, setFilterMonth] = useState('todos');
   const [filterYear, setFilterYear] = useState('todos');
-  const [sortOrder, setSortOrder] = useState('desc'); // 'desc' = más recientes primero, 'asc' = más antiguos
+  const [sortOrder, setSortOrder] = useState('asc'); // 'asc' = cronológico por fecha de evento (los más próximos primero)
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingClient, setEditingClient] = useState(null);
   const [viewingClient, setViewingClient] = useState(null);
@@ -127,17 +127,18 @@ const ClientsPage = () => {
         const dateA = a.fechaEvento.split('T')[0];
         const dateB = b.fechaEvento.split('T')[0];
 
-        const compDate = sortOrder === 'desc'
-          ? dateB.localeCompare(dateA)
-          : dateA.localeCompare(dateB);
+        // Comparación cronológica por fecha del evento (ej: 6 nov -> 7 nov -> 13 nov -> 18 nov -> 21 nov)
+        const compDate = sortOrder === 'asc'
+          ? dateA.localeCompare(dateB)
+          : dateB.localeCompare(dateA);
 
         if (compDate !== 0) return compDate;
 
         // Si la fecha es idéntica, comparar por hora si existe
         if (a.horaEvento && b.horaEvento) {
-          const compHora = sortOrder === 'desc'
-            ? b.horaEvento.localeCompare(a.horaEvento)
-            : a.horaEvento.localeCompare(b.horaEvento);
+          const compHora = sortOrder === 'asc'
+            ? a.horaEvento.localeCompare(b.horaEvento)
+            : b.horaEvento.localeCompare(a.horaEvento);
           if (compHora !== 0) return compHora;
         }
 
@@ -158,7 +159,7 @@ const ClientsPage = () => {
     setFilterType('todos');
     setFilterMonth('todos');
     setFilterYear('todos');
-    setSortOrder('desc');
+    setSortOrder('asc');
   };
 
   const handleAddNew = () => {
@@ -320,11 +321,11 @@ const ClientsPage = () => {
         <button
           type="button"
           className="btn-sort-order"
-          onClick={() => setSortOrder(prev => prev === 'desc' ? 'asc' : 'desc')}
-          title={sortOrder === 'desc' ? 'Orden: Más recientes primero (click para cambiar a más antiguos)' : 'Orden: Más antiguos primero (click para cambiar a más recientes)'}
+          onClick={() => setSortOrder(prev => prev === 'asc' ? 'desc' : 'asc')}
+          title={sortOrder === 'asc' ? 'Orden actual: Más próximos primero (click para invertir a más lejanos)' : 'Orden actual: Más lejanos primero (click para invertir a más próximos)'}
         >
           <ArrowUpDown size={16} />
-          <span>{sortOrder === 'desc' ? 'Más recientes' : 'Más antiguos'}</span>
+          <span>{sortOrder === 'asc' ? 'Fecha: Más próximos' : 'Fecha: Más lejanos'}</span>
         </button>
 
         {/* Botón Limpiar Filtros */}
