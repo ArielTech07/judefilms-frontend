@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Plus, Search, Filter, CheckCircle2 } from 'lucide-react';
+import { Plus, Search, Filter, CheckCircle2, Calendar, CalendarDays, ArrowUpDown, RotateCcw } from 'lucide-react';
 import { getClients, deleteClient } from '../../services/clientService';
 import { updateEvento } from '../../services/eventoService';
 import { flattenAllClients } from '../../utils/mappers';
@@ -13,11 +13,41 @@ import ClientDetail from './ClientDetail';
 import toast from 'react-hot-toast';
 import './ClientsPage.css';
 
+const MONTHS = [
+  { value: 'todos', label: 'Todos los meses' },
+  { value: '01', label: 'Enero' },
+  { value: '02', label: 'Febrero' },
+  { value: '03', label: 'Marzo' },
+  { value: '04', label: 'Abril' },
+  { value: '05', label: 'Mayo' },
+  { value: '06', label: 'Junio' },
+  { value: '07', label: 'Julio' },
+  { value: '08', label: 'Agosto' },
+  { value: '09', label: 'Septiembre' },
+  { value: '10', label: 'Octubre' },
+  { value: '11', label: 'Noviembre' },
+  { value: '12', label: 'Diciembre' }
+];
+
+// Extractor seguro de año y mes sin desfase de zona horaria
+const getClientYearAndMonth = (fechaStr) => {
+  if (!fechaStr) return { year: null, month: null };
+  const cleanDate = fechaStr.split('T')[0];
+  const parts = cleanDate.split('-');
+  if (parts.length >= 2) {
+    return { year: parts[0], month: parts[1] };
+  }
+  return { year: null, month: null };
+};
+
 const ClientsPage = () => {
   const [clients, setClients] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState('todos');
+  const [filterMonth, setFilterMonth] = useState('todos');
+  const [filterYear, setFilterYear] = useState('todos');
+  const [sortOrder, setSortOrder] = useState('desc'); // 'desc' = más recientes primero, 'asc' = más antiguos
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingClient, setEditingClient] = useState(null);
   const [viewingClient, setViewingClient] = useState(null);
@@ -46,17 +76,90 @@ const ClientsPage = () => {
     loadClients();
   }, []);
 
-  const filteredClients = useMemo(() => {
-    return clients.filter(client => {
-      const matchesSearch = client.nombreCompleto?.toLowerCase().includes(searchTerm.toLowerCase());
-      const matchesFilter = filterType === 'todos' || client.tipoEvento === filterType;
-      return matchesSearch && matchesFilter;
-    }).sort((a, b) => {
-      if (!a.fechaEvento) return 1;
-      if (!b.fechaEvento) return -1;
-      return new Date(a.fechaEvento) - new Date(b.fechaEvento);
+  // Obtener dinámicamente los años presentes en los eventos
+  const availableYears = useMemo(() => {
+    const yearsSet = new Set();
+    const currentYear = new Date().getFullYear().toString();
+    yearsSet.add(currentYear);
+
+    clients.forEach((c) => {
+      if (c.fechaEvento) {
+        const { year } = getClientYearAndMonth(c.fechaEvento);
+        if (year && year.length === 4) {
+          yearsSet.add(year);
+        }
+      }
     });
-  }, [clients, searchTerm, filterType]);
+
+    return Array.from(yearsSet).sort((a, b) => b.localeCompare(a));
+  }, [clients]);
+
+  // Filtrado y ordenamiento de clientes por fecha
+  const filteredClients = useMemo(() => {
+    return clients
+      .filter(client => {
+        // 1. Búsqueda por nombre o teléfono
+        const term = searchTerm.trim().toLowerCase();
+        const matchesSearch = !term ||
+          client.nombreCompleto?.toLowerCase().includes(term) ||
+          client.telefono?.toLowerCase().includes(term);
+
+        // 2. Filtro por tipo de evento
+        const matchesFilter = filterType === 'todos' || client.tipoEvento === filterType;
+
+        // 3. Extracción de mes y año
+        const { year, month } = getClientYearAndMonth(client.fechaEvento);
+
+        // 4. Filtro por mes
+        const matchesMonth = filterMonth === 'todos' || (month && month === filterMonth);
+
+        // 5. Filtro por año
+        const matchesYear = filterYear === 'todos' || (year && year === filterYear);
+
+        return matchesSearch && matchesFilter && matchesMonth && matchesYear;
+      })
+      .sort((a, b) => {
+        // Ordenar por fecha del evento (los clientes sin fecha van al final)
+        if (!a.fechaEvento && !b.fechaEvento) return 0;
+        if (!a.fechaEvento) return 1;
+        if (!b.fechaEvento) return -1;
+
+        const dateA = a.fechaEvento.split('T')[0];
+        const dateB = b.fechaEvento.split('T')[0];
+
+        const compDate = sortOrder === 'desc'
+          ? dateB.localeCompare(dateA)
+          : dateA.localeCompare(dateB);
+
+        if (compDate !== 0) return compDate;
+
+        // Si la fecha es idéntica, comparar por hora si existe
+        if (a.horaEvento && b.horaEvento) {
+          const compHora = sortOrder === 'desc'
+            ? b.horaEvento.localeCompare(a.horaEvento)
+            : a.horaEvento.localeCompare(b.horaEvento);
+          if (compHora !== 0) return compHora;
+        }
+
+        // Desempate por nombre alfabético
+        return (a.nombreCompleto || '').localeCompare(b.nombreCompleto || '');
+      });
+  }, [clients, searchTerm, filterType, filterMonth, filterYear, sortOrder]);
+
+  const hasActiveFilters = Boolean(
+    searchTerm.trim() ||
+    filterType !== 'todos' ||
+    filterMonth !== 'todos' ||
+    filterYear !== 'todos'
+  );
+
+  const handleClearFilters = () => {
+    setSearchTerm('');
+    setFilterType('todos');
+    setFilterMonth('todos');
+    setFilterYear('todos');
+    setSortOrder('desc');
+  };
 
   const handleAddNew = () => {
     setEditingClient(null);
@@ -162,18 +265,20 @@ const ClientsPage = () => {
           <Search size={20} className="search-icon" />
           <input
             type="text"
-            placeholder="Buscar por nombre..."
+            placeholder="Buscar por nombre o teléfono..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             autoComplete="off"
           />
         </div>
         
+        {/* Filtro por Tipo de Evento */}
         <div className="filter-box">
-          <Filter size={20} className="filter-icon" />
+          <Filter size={18} className="filter-icon" />
           <select 
             value={filterType}
             onChange={(e) => setFilterType(e.target.value)}
+            aria-label="Filtrar por evento"
           >
             <option value="todos">Todos los eventos</option>
             {EVENT_TYPES.map(type => (
@@ -181,7 +286,76 @@ const ClientsPage = () => {
             ))}
           </select>
         </div>
+
+        {/* Filtro por Mes */}
+        <div className="filter-box">
+          <Calendar size={18} className="filter-icon" />
+          <select 
+            value={filterMonth}
+            onChange={(e) => setFilterMonth(e.target.value)}
+            aria-label="Filtrar por mes"
+          >
+            {MONTHS.map(month => (
+              <option key={month.value} value={month.value}>{month.label}</option>
+            ))}
+          </select>
+        </div>
+
+        {/* Filtro por Año */}
+        <div className="filter-box">
+          <CalendarDays size={18} className="filter-icon" />
+          <select 
+            value={filterYear}
+            onChange={(e) => setFilterYear(e.target.value)}
+            aria-label="Filtrar por año"
+          >
+            <option value="todos">Todos los años</option>
+            {availableYears.map(year => (
+              <option key={year} value={year}>{year}</option>
+            ))}
+          </select>
+        </div>
+
+        {/* Botón Orden de Fecha */}
+        <button
+          type="button"
+          className="btn-sort-order"
+          onClick={() => setSortOrder(prev => prev === 'desc' ? 'asc' : 'desc')}
+          title={sortOrder === 'desc' ? 'Orden: Más recientes primero (click para cambiar a más antiguos)' : 'Orden: Más antiguos primero (click para cambiar a más recientes)'}
+        >
+          <ArrowUpDown size={16} />
+          <span>{sortOrder === 'desc' ? 'Más recientes' : 'Más antiguos'}</span>
+        </button>
+
+        {/* Botón Limpiar Filtros */}
+        {hasActiveFilters && (
+          <button
+            type="button"
+            className="btn-clear-filters"
+            onClick={handleClearFilters}
+            title="Limpiar todos los filtros"
+          >
+            <RotateCcw size={15} />
+            <span>Limpiar</span>
+          </button>
+        )}
       </div>
+
+      {/* Resumen de resultados y filtros activos */}
+      {!isLoading && (
+        <div className="filter-summary-bar">
+          <span className="results-count">
+            {filteredClients.length === 1
+              ? '1 cliente encontrado'
+              : `${filteredClients.length} clientes encontrados`}
+          </span>
+          {hasActiveFilters && (
+            <span className="active-filters-tag">
+              Filtros aplicados
+            </span>
+          )}
+        </div>
+      )}
 
       <div className="clients-grid">
         {isLoading ? (
@@ -231,7 +405,16 @@ const ClientsPage = () => {
           ))
         ) : (
           <div className="no-results">
-            <p>No se encontraron clientes.</p>
+            <p>No se encontraron clientes con los filtros seleccionados.</p>
+            {hasActiveFilters && (
+              <button
+                type="button"
+                className="btn-clear-inline"
+                onClick={handleClearFilters}
+              >
+                Restablecer filtros
+              </button>
+            )}
           </div>
         )}
       </div>
