@@ -511,3 +511,525 @@
     align-items: center;
   }
 }
+
+/* ==========================================================================
+   ESTILOS PARA CMS DE CASOS DE ÉXITO CORPORATIVOS Y VIDEOS REEL
+   ========================================================================== */
+
+.wp-category-top-selector {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--spacing-sm);
+  padding-bottom: var(--spacing-md);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.wp-section-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: var(--color-accent);
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: var(--radius-full);
+}
+
+.wp-select-highlight {
+  border-color: rgba(255, 255, 255, 0.4);
+  font-weight: 600;
+}
+
+/* Contenedor y Grid del Formulario de Video */
+.wp-video-cms-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  animation: fadeIn 0.25s ease;
+}
+
+.wp-video-cms-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--spacing-md);
+}
+
+.wp-card-section {
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: var(--spacing-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.wp-card-span-2 {
+  grid-column: 1 / -1;
+}
+
+.wp-section-subtitle {
+  margin: 0 0 6px 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--color-accent);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.wp-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.wp-form-group label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--color-accent-soft);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.wp-form-group label .req {
+  color: #ef4444;
+}
+
+.wp-input,
+.wp-textarea {
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  color: var(--color-accent);
+  padding: 9px 12px;
+  font-size: 0.88rem;
+  font-family: inherit;
+  transition: all var(--transition-fast);
+}
+
+.wp-input:focus,
+.wp-textarea:focus {
+  outline: none;
+  border-color: rgba(255, 255, 255, 0.45);
+  background: var(--color-bg-elevated);
+}
+
+.wp-textarea {
+  resize: vertical;
+}
+
+.wp-help-text {
+  font-size: 0.72rem;
+  color: var(--color-accent-muted);
+}
+
+.text-center {
+  text-align: center;
+}
+
+.wp-form-row {
+  display: flex;
+  gap: var(--spacing-md);
+}
+
+.flex-1 {
+  flex: 1;
+}
+
+.justify-end {
+  justify-content: flex-end;
+}
+
+.mt-4 {
+  margin-top: 12px;
+}
+
+.ml-auto {
+  margin-left: auto;
+}
+
+.mr-1 {
+  margin-right: 4px;
+}
+
+
+/* Layout Cliente y Avatar */
+.wp-client-form-layout {
+  display: flex;
+  gap: var(--spacing-lg);
+  align-items: flex-start;
+}
+
+.wp-avatar-upload-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  min-width: 130px;
+}
+
+.wp-avatar-picker {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  border: 2px solid #ef4444; /* Borde rojo característico de la referencia */
+  padding: 3px;
+  background: var(--color-bg-secondary);
+  cursor: pointer;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+}
+
+.wp-avatar-picker:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 12px rgba(239, 68, 68, 0.5);
+}
+
+.wp-avatar-preview-circle {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.wp-avatar-empty-circle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  color: var(--color-accent-muted);
+  font-size: 0.7rem;
+}
+
+.wp-client-fields-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  width: 100%;
+}
+
+
+
+/* Botón especial confirmar video */
+.wp-btn-confirm-video {
+  background: linear-gradient(135deg, #ffffff 0%, #d4d4d4 100%);
+  color: #000000;
+  padding: 10px 20px;
+  font-size: 0.88rem;
+  box-shadow: 0 4px 14px rgba(255, 255, 255, 0.2);
+}
+
+/* Botón filtro video */
+.wp-btn-filter-video {
+  border-color: rgba(255, 255, 255, 0.25) !important;
+  font-weight: 600;
+}
+
+/* Tarjetas de video en el grid */
+.wp-media-item.is-video-item {
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: var(--color-bg-secondary);
+}
+
+.wp-media-thumb-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  background: #000;
+}
+
+.wp-video-grid-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+}
+
+.wp-media-item:hover .wp-video-grid-overlay {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.wp-video-grid-play {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-left: 2px;
+}
+
+.wp-video-grid-badge {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  background: #000000;
+  color: #ffffff;
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 3px;
+  text-transform: uppercase;
+}
+
+.wp-badge-video {
+  background: rgba(239, 68, 68, 0.2) !important;
+  color: #f87171 !important;
+  border: 1px solid rgba(239, 68, 68, 0.4) !important;
+}
+
+.wp-item-video-meta {
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.wp-meta-company {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--color-accent-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.wp-meta-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.wp-meta-client {
+  font-size: 0.72rem;
+  color: var(--color-accent-muted);
+}
+
+/* Modal Detalle para Video Corporativo */
+.wp-modal-detail.wp-modal-detail-video {
+  max-width: 860px;
+  grid-template-columns: 1fr;
+  padding: 0;
+}
+
+.wp-modal-video-showcase {
+  display: grid;
+  grid-template-columns: 1fr 1.15fr;
+  gap: var(--spacing-lg);
+  padding: var(--spacing-xl);
+  background: #0a0a0a;
+}
+
+.wp-modal-video-left {
+  display: flex;
+  flex-direction: column;
+}
+
+.wp-modal-video-player-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  background: #000000;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.wp-modal-video-bg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.75;
+}
+
+.wp-modal-video-iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
+}
+
+.wp-modal-video-center-btn {
+  position: absolute;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-left: 3px;
+}
+
+.wp-modal-video-link-btn {
+  position: absolute;
+  bottom: 12px;
+  background: rgba(0, 0, 0, 0.85);
+  color: #ffffff;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: var(--radius-full);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  transition: all var(--transition-fast);
+}
+
+.wp-modal-video-link-btn:hover {
+  background: #ffffff;
+  color: #000000;
+}
+
+.wp-modal-video-right {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.wp-modal-empresa-pill {
+  align-self: flex-start;
+  border: 1px solid #ffffff;
+  padding: 4px 14px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #ffffff;
+  border-radius: 2px;
+}
+
+.wp-modal-eyebrow {
+  font-size: 0.68rem;
+  letter-spacing: 1.5px;
+  color: var(--color-accent-muted);
+}
+
+.wp-modal-event-title {
+  font-size: 1.45rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0;
+  line-height: 1.25;
+}
+
+.wp-modal-event-desc {
+  font-size: 0.9rem;
+  color: var(--color-accent-soft);
+  margin: 0;
+}
+
+.wp-modal-testimonial-card {
+  background: #141414;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.wp-modal-test-author {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.wp-modal-avatar-frame {
+  width: 48px;
+  height: 48px;
+  min-width: 48px;
+  border-radius: 50%;
+  border: 2px solid #ef4444;
+  padding: 1px;
+  overflow: hidden;
+  background: #222;
+}
+
+.wp-modal-avatar-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.wp-modal-author-name {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+}
+
+.wp-modal-author-role {
+  font-size: 0.75rem;
+  color: var(--color-accent-muted);
+  margin: 2px 0 0 0;
+}
+
+.wp-modal-quote {
+  font-size: 0.85rem;
+  font-style: italic;
+  color: #d8d8d8;
+  margin: 0;
+  padding-left: 10px;
+  border-left: 2px solid rgba(255, 255, 255, 0.3);
+  line-height: 1.45;
+}
+
+/* Responsividad para móviles */
+@media (max-width: 900px) {
+  .wp-video-cms-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .wp-card-span-2 {
+    grid-column: 1;
+  }
+
+  .wp-modal-video-showcase {
+    grid-template-columns: 1fr;
+  }
+
+  .wp-client-form-layout {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .wp-avatar-upload-col {
+    align-self: center;
+  }
+
+  .wp-form-row {
+    flex-direction: column;
+    gap: var(--spacing-sm);
+  }
+}
+
